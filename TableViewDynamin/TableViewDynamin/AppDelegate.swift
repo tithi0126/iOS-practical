@@ -1,0 +1,160 @@
+////
+////  AppDelegate.swift
+////  TableViewDynamin
+////
+////  Created by Tithi Shah on 2/3/26.
+////
+//
+//import UIKit
+//import CoreData
+//
+//@main
+//class AppDelegate: UIResponder, UIApplicationDelegate {
+//
+//
+//
+//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+//        // Override point for customization after application launch.
+//        return true
+//    }
+//
+//    // MARK: UISceneSession Lifecycle
+//
+//    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+//        // Called when a new scene session is being created.
+//        // Use this method to select a configuration to create the new scene with.
+//        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+//    }
+//
+//    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+//        // Called when the user discards a scene session.
+//        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
+//        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
+//    }
+//
+//    // MARK: - Core Data stack
+//
+//    lazy var persistentContainer: NSPersistentContainer = {
+//        /*
+//         The persistent container for the application. This implementation
+//         creates and returns a container, having loaded the store for the
+//         application to it. This property is optional since there are legitimate
+//         error conditions that could cause the creation of the store to fail.
+//        */
+//        let container = NSPersistentContainer(name: "TableViewDynamin")
+//        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+//            if let error = error as NSError? {
+//                // Replace this implementation with code to handle the error appropriately.
+//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                 
+//                /*
+//                 Typical reasons for an error here include:
+//                 * The parent directory does not exist, cannot be created, or disallows writing.
+//                 * The persistent store is not accessible, due to permissions or data protection when the device is locked.
+//                 * The device is out of space.
+//                 * The store could not be migrated to the current model version.
+//                 Check the error message to determine what the actual problem was.
+//                 */
+//                fatalError("Unresolved error \(error), \(error.userInfo)")
+//            }
+//        })
+//        return container
+//    }()
+//
+//    // MARK: - Core Data Saving support
+//
+//    func saveContext () {
+//        let context = persistentContainer.viewContext
+//        if context.hasChanges {
+//            do {
+//                try context.save()
+//            } catch {
+//                // Replace this implementation with code to handle the error appropriately.
+//                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//                let nserror = error as NSError
+//                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+//            }
+//        }
+//    }
+//
+//}
+//
+
+
+import UIKit
+import CoreData
+
+@main
+class AppDelegate: UIResponder, UIApplicationDelegate {
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // Override point for customization after application launch.
+        
+        // Disable keyboard haptic feedback to prevent the errors
+        disableKeyboardHaptics()
+        
+        return true
+    }
+
+    private func disableKeyboardHaptics() {
+        // Comprehensive haptic feedback disabling
+        if #available(iOS 13.0, *) {
+            // 1. Disable keyboard haptics via UserDefaults
+            UserDefaults.standard.set(false, forKey: "KeyboardHapticFeedbackEnabled")
+            UserDefaults.standard.set(false, forKey: "HapticFeedbackEnabled")
+            UserDefaults.standard.set(false, forKey: "_UIKeyboardEnableHapticFeedback")
+            
+            // 2. Try to disable system-wide haptics
+            UserDefaults.standard.set(false, forKey: "SystemHapticsEnabled")
+            UserDefaults.standard.set(false, forKey: "SoundsAndHapticsEnabled")
+            
+            // 3. Additional settings that might affect haptics
+            UserDefaults.standard.set(false, forKey: "UIFeedbackEnabled")
+            UserDefaults.standard.set(false, forKey: "UIPreviewInteractionFeedbackEnabled")
+            
+            // 4. Force immediate synchronization
+            UserDefaults.standard.synchronize()
+            
+            // 5. Disable shake to edit
+            UIApplication.shared.applicationSupportsShakeToEdit = false
+            
+            print("Keyboard haptics disabled")
+        }
+    }
+
+    // MARK: UISceneSession Lifecycle
+
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
+    }
+
+    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+        // Clean up any resources that were specific to the discarded scenes.
+    }
+
+    // MARK: - Core Data stack
+
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "TableViewDynamin")
+        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+            if let error = error as NSError? {
+                fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+        })
+        return container
+    }()
+
+    // MARK: - Core Data Saving support
+
+    func saveContext () {
+        let context = persistentContainer.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                let nserror = error as NSError
+                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            }
+        }
+    }
+}
